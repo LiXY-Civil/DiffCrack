@@ -1,0 +1,69 @@
+# ===================================
+# 完整的DDPM训练配置文件
+# ===================================
+
+# 数据集相关配置
+dataset_name: null                    # HuggingFace数据集名称，如果使用本地数据则设为null
+dataset_config_name: null            # 数据集配置名称，通常设为null
+train_data_dir: ""  # 本地训练数据目录路径
+cache_dir: "./cache"                 # 缓存目录
+
+# 模型相关配置
+model_config_name_or_path: null      # 预训练模型配置路径，null表示使用默认DDPM配置
+resolution: 224                      # 图像分辨率 (64, 128, 256, 512等)
+# 旁路分支损失权重
+lambda_bypass: 1           # 旁路损失权重lambda
+gamma: 0.1                   # 空间变化均值约束损失gamma参数
+
+# 输出相关配置
+output_dir: ""  # 模型输出目录
+overwrite_output_dir: false             # 是否覆盖输出目录
+
+# 数据预处理配置
+center_crop: true                    # 是否使用中心裁剪（false为随机裁剪）
+random_flip: true                    # 是否随机水平翻转
+
+# 训练参数配置
+train_batch_size: 12                 # 每个设备的训练批次大小
+eval_batch_size: 12                   # 评估批次大小
+dataloader_num_workers: 0            # 数据加载器工作进程数
+num_epochs: 200                     # 训练轮数
+save_images_epochs: 20               # 每多少轮保存一次示例图像
+save_model_epochs: 20                # 每多少轮保存一次模型
+gradient_accumulation_steps: 1       # 梯度累积步数
+
+# 优化器配置
+learning_rate: 1e-4                  # 学习率
+lr_scheduler: "cosine"               # 学习率调度器 ["linear", "cosine", "cosine_with_restarts", "polynomial", "constant", "constant_with_warmup"]
+lr_warmup_steps: 500                # 学习率预热步数
+adam_beta1: 0.9                     # Adam优化器beta1参数
+adam_beta2: 0.999                   # Adam优化器beta2参数
+adam_weight_decay: 1e-2             # Adam优化器权重衰减
+adam_epsilon: 1e-8                  # Adam优化器epsilon值
+
+# EMA (指数移动平均) 配置
+use_ema: true                       # 是否使用EMA
+ema_inv_gamma: 1.0                  # EMA逆伽马值
+ema_power: 0.75                     # EMA幂值 (3/4 = 0.75)
+ema_max_decay: 0.9999               # EMA最大衰减率
+
+# 日志记录配置
+logger: "tensorboard"               # 日志记录工具 ["tensorboard", "wandb"]
+logging_dir: "logs"                 # 日志目录
+
+# 系统配置
+local_rank: -1                      # 分布式训练本地rank
+mixed_precision: "fp16"             # 混合精度 ["no", "fp16", "bf16"]
+
+# DDPM算法配置
+prediction_type: "epsilon"          # 预测类型 ["epsilon", "sample"]
+ddpm_num_steps: 1000               # DDPM训练步数
+ddpm_beta_schedule: "squaredcos_cap_v2"        # DDPM beta调度
+
+# 检查点配置
+checkpointing_steps: 1000           # 每多少步保存一次检查点
+checkpoints_total_limit: 5          # 最大检查点数量 (null表示无限制)
+resume_from_checkpoint: latest        # 从检查点恢复训练的路径 (null或"latest")
+
+# 性能优化配置
+enable_xformers_memory_efficient_attention: false  # 是否启用xformers内存高效注意力

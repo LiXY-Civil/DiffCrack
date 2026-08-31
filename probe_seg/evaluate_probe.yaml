@@ -1,0 +1,27 @@
+seed: 42
+ddpm_beta_schedule: squaredcos_cap_v2
+
+data:
+  img_dir: ""
+  mask_dir: ""
+  # 如无独立测试集可先用验证集评估
+  test_list: ""
+  img_size: 224
+  mask_threshold: 128
+
+batch_size: 16
+num_workers: 0
+
+output_dir: ""
+
+model:
+  # 必须是目录：MeanBypassUNet.save_pretrained(...) 的输出
+  unet_ckpt: ""
+  probe_block_name: "up_blocks.2.upsamplers.last"
+  probe_timestep: 500
+  seg_head:
+    name: "residual_seg"
+    num_classes: 2
+    in_channels: 256
+    ckpt: ""
+  ignore_label: 255

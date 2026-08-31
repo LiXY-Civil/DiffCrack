@@ -1,0 +1,27 @@
+data:
+  img_dir: ""            # 原始图片文件夹
+  mask_dir: ""            # 掩码文件夹
+  train_list: ""      # 训练集文件名列表
+  val_list: ""          # 验证集文件名列表
+  img_size: 128                                   # 输入图片和掩码resize尺寸
+
+output_dir: "/sdf_xy/lxy/diffusers/experiment/crackseg9k/seg_lraspp"  # 输出目录
+experiment_name: "crack_seg_exp1"
+
+model:
+  unet_ckpt: ""  # 预训练U-Net权重路径
+  probe_block_name: "up_blocks.3.upsamplers.last"          # 指定hook的层名
+  probe_timestep: 50                                       # 指定扩散时间步
+  seg_head:
+    name: "lraspp"         # 可选: mlp_simple, mlp_deep, conv1x1, segmenter_mlp, light_unet, lraspp
+    in_channels: 256              # 特征通道数（需与probe_block输出一致）
+    num_classes: 2           # 类别数
+  ignore_label: 255
+
+training:
+  lr: 0.0003
+  epochs: 100
+  batch_size: 8
+  use_validation: true
+  val_interval: 1
+  seed: 42
